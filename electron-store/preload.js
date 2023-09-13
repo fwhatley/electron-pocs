@@ -8,3 +8,10 @@ contextBridge.exposeInMainWorld('versions', {
     // we can also expose variables, not just functions
 
 })
+
+contextBridge.exposeInMainWorld('electronStore', {
+    get: async (key) => await ipcRenderer.invoke('electron-store-get', key),
+    set: (key, value) => ipcRenderer.invoke('electron-store-set', key, value),
+    // we can als expose variables, not just functions
+
+})

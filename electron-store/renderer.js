@@ -7,3 +7,20 @@ const func = async () => {
 }
 
 func()
+
+
+// load user settings
+const dataTextareaEl = document.getElementById('data')
+const saveBtnEl = document.getElementById('save-btn')
+
+const loadSettings = async () => {
+    const userSettingsJson = await window.electronStore.get('userSetttings')
+    dataTextareaEl.innerHTML = JSON.stringify(userSettingsJson)
+}
+loadSettings()
+
+// save user settings
+saveBtnEl.addEventListener('click', () => {
+    const jsonData = JSON.parse(dataTextareaEl.value)
+    window.electronStore.set('userSetttings', jsonData)
+})

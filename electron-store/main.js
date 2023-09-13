@@ -1,5 +1,10 @@
 const { app, BrowserWindow, ipcMain} = require('electron')
 const path = require('node:path')
+const Store = require('electron-store')
+
+Store.initRenderer()
+console.log('fw - config: ', app.getPath('userData'));
+
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -16,6 +21,18 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
     ipcMain.handle('ping', () => 'pong')
+
+    const store = new Store();
+    ipcMain.handle('electron-store-get', (event, key) => {
+       const result = store.get(key)
+       console.log('fw1: - get', result)
+       return result
+    })
+
+    ipcMain.handle('electron-store-set', (event, key, value) => {
+        console.log('fw - set: ', key, value)
+        store.set(key, value)
+    })
 
     createWindow()
 
