@@ -1,0 +1,28 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        
+        <h1>App</h1>
+        <script>
+            
+            window.channel.requestChannel()
+
+            // we request that the main process sends us a channel we can use
+            // to communicate with the worker
+            window.onmessage = (event) => {
+                if (event.source === window && event.data === 'provide-worker-channel') {
+                    // once we receie the reply, we can take the port...
+                    const [port] = event.ports
+                    // ... register a hnadler to receive results ...
+                    port.onmessage = (event) => {
+                        console.log('received result:', event.data)
+                    }
+                    // ... and start sending it work!
+                    port.postMessage(21)
+                }
+            }
+        </script>
+    </body>
+</html>

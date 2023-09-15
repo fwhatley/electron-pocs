@@ -1,0 +1,29 @@
+<html>
+    <head>
+
+    </head>
+    <body>
+        
+        <h1>Worker</h1>
+        <script>
+            const doWork = (input) => {
+                // do something intensive
+                console.log('process long running operation on: ', input)
+                return input * 2
+            }
+
+            window.onmessage = () => {
+                if (event.source === window && event.data === 'new-client') {
+                    const [port] = event.ports
+                    port.onmessage = (event) => {
+                        // the event data can be any serializable object
+                        // (and the eevent  could even carry other MessagePorts with it!)
+                        const result = doWork(event.data)
+                        port.postMessage(result)
+                    }
+                }
+            }
+
+        </script>
+    </body>
+</html>
